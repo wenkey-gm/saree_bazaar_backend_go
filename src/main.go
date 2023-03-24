@@ -1,22 +1,25 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	controller "saree_bazaar.com/src/service"
 )
 
 func main() {
+	r := mux.NewRouter()
 
-	http.HandleFunc("/", controller.GetAllSarees)
+	r.HandleFunc("/", controller.GetAllSarees)
 
-	http.HandleFunc("/saree", controller.GetSaree)
+	r.HandleFunc("/saree", controller.GetSaree)
 
-	http.HandleFunc("/create", controller.CreateSaree)
+	r.HandleFunc("/create", controller.CreateSaree)
 
-	http.HandleFunc("/update", controller.UpdateSaree)
+	r.HandleFunc("/update", controller.UpdateSaree)
 
-	http.HandleFunc("/delete", controller.DeleteSaree)
+	r.HandleFunc("/delete", controller.DeleteSaree)
 
-	http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8000", r))
 }

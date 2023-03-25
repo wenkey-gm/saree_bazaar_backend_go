@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	controller "saree_bazaar.com/src/service"
+	controller "saree_bazaar.com/service"
 )
 
 func main() {

@@ -8,8 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"saree_bazaar.com/src/config"
-	"saree_bazaar.com/src/modal"
+	"saree_bazaar.com/config"
+	"saree_bazaar.com/modal"
 )
 
 // GetAllSarees is a function

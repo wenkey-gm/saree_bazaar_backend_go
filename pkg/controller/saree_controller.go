@@ -15,7 +15,6 @@ import (
 
 var db = datastore.ConnectDB()
 
-// GetAllSarees is a function
 func GetAllSarees(w http.ResponseWriter, r *http.Request) {
 
 	var sarees []modal.Saree

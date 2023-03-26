@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"saree_bazaar.com/pkg/domain/modal"
 	"saree_bazaar.com/pkg/infrastructure/datastore"
+	"saree_bazaar.com/pkg/service"
 )
 
 var db = datastore.ConnectDB()
@@ -50,21 +50,18 @@ func GetAllSarees(w http.ResponseWriter, r *http.Request) {
 
 func GetSaree(w http.ResponseWriter, r *http.Request) {
 
-	var saree modal.Saree
-
 	var params = mux.Vars(r)
 
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 
-	filter := bson.M{"_id": id}
-	err := db.Collection("sarees").FindOne(context.TODO(), filter).Decode(&saree)
-
+	response, err := service.NewSareeService().GetSaree(id)
 	if err != nil {
 		GetError(err, w)
 		return
 	}
+
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(saree)
+	json.NewEncoder(w).Encode(response)
 }
 
 // CreateSaree is a function
@@ -75,8 +72,7 @@ func CreateSaree(w http.ResponseWriter, r *http.Request) {
 
 	_ = json.NewDecoder(r.Body).Decode(&saree)
 
-	result, err := db.Collection("sarees").InsertOne(context.TODO(), saree)
-
+	result, err := service.NewSareeService().CreateSaree(saree)
 	if err != nil {
 		GetError(err, w)
 		return
@@ -96,31 +92,16 @@ func UpdateSaree(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 
-	filter := bson.M{"_id": id}
-
 	_ = json.NewDecoder(r.Body).Decode(&saree)
 
-	update := bson.D{
-		{"$set", bson.D{
-			{"name", saree.Name},
-			{"price", saree.Price},
-			{"image", saree.Image},
-			{"type", saree.Type},
-			{"color", saree.Color},
-		}},
-	}
-
-	err := db.Collection("sarees").FindOneAndUpdate(context.TODO(), filter, update).Decode(&saree)
-
+	err := service.NewSareeService().UpdateSaree(id, saree)
 	if err != nil {
 		GetError(err, w)
 		return
 	}
 
-	saree.ID = id
-
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(saree)
+	json.NewEncoder(w).Encode("Saree updated successfully")
 }
 
 // DeleteSaree is a function
@@ -131,8 +112,7 @@ func DeleteSaree(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := primitive.ObjectIDFromHex(params["id"])
 
-	deleteResult, err := db.Collection("sare	es").DeleteOne(context.TODO(), bson.M{"_id": id})
-
+	deleteResult, err := service.NewSareeService().DeleteSaree(id)
 	if err != nil {
 		GetError(err, w)
 		return
@@ -143,13 +123,7 @@ func DeleteSaree(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetError(err error, w http.ResponseWriter) {
-
-	log.Fatal(err.Error())
-	var response = modal.ErrorResponse{
-		ErrorMessage: err.Error(),
-		StatusCode:   http.StatusInternalServerError,
-	}
-
+	response := service.GetError(err)
 	message, _ := json.Marshal(response)
 
 	w.WriteHeader(response.StatusCode)

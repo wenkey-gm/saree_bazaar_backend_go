@@ -8,12 +8,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"saree_bazaar.com/pkg/config"
 )
 
 func ConnectDB() *mongo.Database {
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(config.C.Database.Address))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -21,6 +20,6 @@ func ConnectDB() *mongo.Database {
 	if err != nil {
 		panic(err)
 	}
-	db := client.Database(config.C.Database.DatabaseName)
+	db := client.Database("saree_bazaar")
 	return db
 }

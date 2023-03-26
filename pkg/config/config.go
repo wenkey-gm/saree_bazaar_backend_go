@@ -1,6 +1,9 @@
 package config
 
 import (
+	"fmt"
+	"log"
+	"os"
 	"path"
 	"path/filepath"
 	"runtime"
@@ -11,8 +14,8 @@ import (
 
 type config struct {
 	Database struct {
-		DatabaseName   string
-		Address        string
+		DatabaseName string
+		Address      string
 	}
 	Server struct {
 		Port string
@@ -32,20 +35,22 @@ func ReadConfig() {
 	err := viper.ReadInConfig()
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		log.Fatalln(err)
 	}
 
 	err = viper.Unmarshal(Config)
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
-	spew.Dump(Config)
+	spew.Dump(C)
 }
 
 func rootDir() string {
 	_, b, _, _ := runtime.Caller(0)
 	d := path.Join(path.Dir(b))
-	return filepath.Join(d)
+	return filepath.Dir(d)
 }

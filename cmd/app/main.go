@@ -5,25 +5,24 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"saree_bazaar.com/pkg/config"
 	controller "saree_bazaar.com/pkg/controller"
 )
 
 func main() {
 
-	config.ReadConfig()
-
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", controller.GetAllSarees)
+	r.HandleFunc("/sarees", controller.GetAllSarees).Methods("GET")
 
-	r.HandleFunc("/saree", controller.GetSaree)
+	r.HandleFunc("/saree/{id}/", controller.GetSaree).Methods("GET")
 
-	r.HandleFunc("/create", controller.CreateSaree)
+	r.HandleFunc("/create", controller.CreateSaree).Methods("POST")
 
-	r.HandleFunc("/update", controller.UpdateSaree)
+	r.HandleFunc("/update/{id}/", controller.UpdateSaree).Methods("PUT")
 
-	r.HandleFunc("/delete", controller.DeleteSaree)
+	r.HandleFunc("/delete/{id}/", controller.DeleteSaree).Methods("DELETE")
+
+	http.Handle("/", r)
 
 	log.Fatal(http.ListenAndServe(":8000", r))
 }

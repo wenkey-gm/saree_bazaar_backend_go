@@ -1,12 +1,11 @@
 package controller
 
 import (
-	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"saree_bazaar.com/pkg/domain/modal"
 	"saree_bazaar.com/pkg/infrastructure/datastore"
@@ -17,33 +16,14 @@ var db = datastore.ConnectDB()
 
 func GetAllSarees(w http.ResponseWriter, r *http.Request) {
 
-	var sarees []modal.Saree
-
-	cur, err := db.Collection("sarees").Find(context.TODO(), bson.M{})
+	response, err := service.NewSareeService().GetAllSarees()
 	if err != nil {
 		GetError(err, w)
 		return
 	}
 
-	defer cur.Close(context.TODO())
-
-	for cur.Next(context.TODO()) {
-		var saree modal.Saree
-		err := cur.Decode(&saree)
-		if err != nil {
-			GetError(err, w)
-			return
-		}
-		sarees = append(sarees, saree)
-	}
-
-	if err := cur.Err(); err != nil {
-		GetError(err, w)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(sarees)
+	json.NewEncoder(w).Encode(response)
 }
 
 // GetSaree is a function
@@ -53,6 +33,7 @@ func GetSaree(w http.ResponseWriter, r *http.Request) {
 	var params = mux.Vars(r)
 
 	id, _ := primitive.ObjectIDFromHex(params["id"])
+	log.Println("hello")
 
 	response, err := service.NewSareeService().GetSaree(id)
 	if err != nil {

@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -33,7 +32,6 @@ func GetSaree(w http.ResponseWriter, r *http.Request) {
 	var params = mux.Vars(r)
 
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	log.Println("hello")
 
 	response, err := service.NewSareeService().GetSaree(id)
 	if err != nil {

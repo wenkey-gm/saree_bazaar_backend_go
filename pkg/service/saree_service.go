@@ -85,12 +85,12 @@ func (*sareeService) UpdateSaree(id primitive.ObjectID, saree modal.Saree) error
 
 	filter := bson.M{"_id": id}
 	update := bson.D{
-		{"$set", bson.D{
-			{"name", saree.Name},
-			{"price", saree.Price},
-			{"image", saree.Image},
-			{"type", saree.Type},
-			{"color", saree.Color},
+		{Key: "$set", Value: bson.D{
+			{Key: "name", Value: saree.Name},
+			{Key: "price", Value: saree.Price},
+			{Key: "image", Value: saree.Image},
+			{Key: "type", Value: saree.Type},
+			{Key: "color", Value: saree.Color},
 		}},
 	}
 

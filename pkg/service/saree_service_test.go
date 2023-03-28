@@ -1,6 +1,7 @@
 package service
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -104,6 +105,50 @@ func Test_sareeService_GetSaree(t *testing.T) {
 	}
 }
 
+func Test_sareeService_CreateSaree(t *testing.T) {
+	type args struct {
+		saree modal.Saree
+	}
+
+	saree := modal.Saree{
+		Name:  "Saree 1",
+		Price: 100,
+		Image: byte(1),
+		Type:  "Type 1",
+		Color: "Color 1",
+	}
+	tests := []struct {
+		name    string
+		s       *sareeService
+		args    args
+		want    interface{}
+		wantErr bool
+	}{
+		{
+			name: "Test sareeService.CreateSaree",
+			s:    &sareeService{},
+			args: args{
+				saree: saree,
+			},
+			want:    saree,
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := &mockSareeRepository{}
+			got, err := s.CreateSaree(tt.args.saree)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("sareeService.CreateSaree() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("sareeService.CreateSaree() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
 type mockSareeRepository struct {
 }
 
@@ -127,6 +172,16 @@ func (m *mockSareeRepository) GetAllSarees() ([]modal.Saree, error) {
 }
 
 func (m *mockSareeRepository) GetSaree(id string) (modal.Saree, error) {
+	return modal.Saree{
+		Name:  "Saree 1",
+		Price: 100,
+		Image: byte(1),
+		Type:  "Type 1",
+		Color: "Color 1",
+	}, nil
+}
+
+func (m *mockSareeRepository) CreateSaree(saree modal.Saree) (interface{}, error) {
 	return modal.Saree{
 		Name:  "Saree 1",
 		Price: 100,

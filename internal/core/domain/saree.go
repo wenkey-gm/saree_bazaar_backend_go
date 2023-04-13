@@ -1,7 +1,6 @@
 package domain
 
 type Saree struct {
-	Id               string     `json:"id"`
 	FabricType       string     `json:"fabric_type" `
 	Category         string     `json:"category"`
 	Color            string     `json:"color"`

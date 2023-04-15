@@ -32,10 +32,10 @@ func NewSareeRepository() *sareeRepository {
 
 	fmt.Println("Connected to MongoDB!")
 
-	database := client.Database("saree").Collection("sarees")
+	collection := client.Database("saree").Collection("sarees")
 
 	return &sareeRepository{
-		repo: database,
+		repo: collection,
 	}
 }
 

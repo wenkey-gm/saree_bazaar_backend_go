@@ -7,6 +7,7 @@ import (
 	"product_api/internal/core/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -64,7 +65,11 @@ func (s *sareeRepository) FindAll() ([]domain.Saree, error) {
 
 func (s *sareeRepository) Find(id string) (domain.Saree, error) {
 	var saree domain.Saree
-	err := s.repo.FindOne(context.Background(), bson.M{"id": id}).Decode(&saree)
+	objectId, objectErr := primitive.ObjectIDFromHex(id)
+	if objectErr != nil {
+		return domain.Saree{}, objectErr
+	}
+	err := s.repo.FindOne(context.Background(), bson.M{"_id": objectId}).Decode(&saree)
 	if err != nil {
 		return domain.Saree{}, err
 	}
@@ -90,7 +95,11 @@ func (s *sareeRepository) Update(id string, saree domain.Saree) (domain.Saree, e
 }
 
 func (s *sareeRepository) Delete(id string) error {
-	_, err := s.repo.DeleteOne(context.Background(), bson.M{"id": id})
+	objectId, objectErr := primitive.ObjectIDFromHex(id)
+	if objectErr != nil {
+		return objectErr
+	}
+	_, err := s.repo.DeleteOne(context.Background(), bson.M{"id": objectId})
 	if err != nil {
 		return err
 	}

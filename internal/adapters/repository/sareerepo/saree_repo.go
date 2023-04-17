@@ -12,11 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type sareeRepository struct {
-	repo *mongo.Collection
-}
-
-func NewSareeRepository() *sareeRepository {
+func ConnectMongoDbCollection() *mongo.Collection {
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 
 	client, err := mongo.Connect(context.Background(), clientOptions)
@@ -33,8 +29,14 @@ func NewSareeRepository() *sareeRepository {
 
 	fmt.Println("Connected to MongoDB!")
 
-	collection := client.Database("saree").Collection("sarees")
+	return client.Database("saree").Collection("sarees")
+}
 
+type sareeRepository struct {
+	repo *mongo.Collection
+}
+
+func NewSareeRepository(collection *mongo.Collection) *sareeRepository {
 	return &sareeRepository{
 		repo: collection,
 	}

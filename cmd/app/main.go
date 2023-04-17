@@ -11,7 +11,9 @@ import (
 
 func main() {
 
-	sareeRepository := sareerepo.NewSareeRepository()
+	collection := sareerepo.ConnectMongoDbCollection()
+
+	sareeRepository := sareerepo.NewSareeRepository(collection)
 	sareeService := services.NewSareeService(sareeRepository)
 
 	sareeHandler := sareehdl.NewSareeHandler(sareeService)

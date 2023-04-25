@@ -13,7 +13,7 @@ import (
 )
 
 func ConnectMongoDbCollection() *mongo.Collection {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://mongo:27017") // mongodb://localhost:27017
 
 	client, err := mongo.Connect(context.Background(), clientOptions)
 

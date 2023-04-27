@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 services:
   web:
     container_name: web
@@ -9,6 +9,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8080:8080
+    environment:
+      MONGO_URI: mongodb://mongo:27017
   mongo:
     image: mongo:latest
     container_name: mongo

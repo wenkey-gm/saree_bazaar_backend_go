@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"product_api/internal/core/domain"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -13,7 +14,12 @@ import (
 )
 
 func ConnectMongoDbCollection() *mongo.Collection {
-	clientOptions := options.Client().ApplyURI("mongodb://mongo:27017") // mongodb://localhost:27017
+
+	MONGO_URL := os.Getenv("MONGO_URL")
+	if MONGO_URL == "" {
+		MONGO_URL = "mongodb://localhost:27017"
+	}
+	clientOptions := options.Client().ApplyURI(MONGO_URL) // mongodb://localhost:27017
 
 	client, err := mongo.Connect(context.Background(), clientOptions)
 

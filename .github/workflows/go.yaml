@@ -12,13 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongo
-        ports:
-          - 27017:27017
-        options: --health-cmd "mongo --version" --health-interval 10s --health-timeout 5s --health-retries 3
-
     steps:
       - uses: actions/checkout@v3
 
@@ -30,7 +23,14 @@ jobs:
       - name: Build
         run: go build -v ./...
 
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: 6.0.0
+          mongodb-replica-set: test-rs
+          mongodb-port: 27017
+
       - name: Test
         run: go test -v ./...
         env:
-          MONGO_URL: mongodb://mongo:27017
+          MONGO_URL: mongodb://localhost:27017

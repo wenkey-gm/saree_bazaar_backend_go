@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"product_api/internal/core/domain"
+	"product_api/internal/utils"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -17,7 +18,7 @@ func ConnectMongoDbCollection() *mongo.Collection {
 
 	MONGO_URL := os.Getenv("MONGO_URL")
 	if MONGO_URL == "" {
-		MONGO_URL = "mongodb://localhost:27017"
+		MONGO_URL = utils.MONGO_URL
 	}
 	clientOptions := options.Client().ApplyURI(MONGO_URL) // mongodb://localhost:27017
 
@@ -35,7 +36,7 @@ func ConnectMongoDbCollection() *mongo.Collection {
 
 	fmt.Println("Connected to MongoDB!")
 
-	return client.Database("saree").Collection("sarees")
+	return client.Database(utils.DB_NAME).Collection(utils.COLLECTION_NAME)
 }
 
 type sareeRepository struct {

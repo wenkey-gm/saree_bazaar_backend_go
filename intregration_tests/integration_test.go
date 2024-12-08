@@ -5,7 +5,7 @@ import (
 	"flag"
 	"log"
 	"os"
-	"product_api/internal/adapters/repository/sareerepo"
+	"product_api/internal/adapters/repository/saree_repo"
 	"product_api/internal/core/domain"
 	"product_api/internal/core/services"
 	"testing"
@@ -74,7 +74,7 @@ func Test_sareeRepository(t *testing.T) {
 			},
 		})
 
-		sareeRepo := sareerepo.NewSareeRepository(repo)
+		sareeRepo := saree_repo.NewSareeRepository(repo)
 		sareeService := services.NewSareeService(sareeRepo)
 		sarees, err := sareeService.FindAll()
 		require.NoError(t, err)
@@ -96,7 +96,7 @@ func Test_sareeRepository(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		sareeRepo := sareerepo.NewSareeRepository(repo)
+		sareeRepo := saree_repo.NewSareeRepository(repo)
 		sareeService := services.NewSareeService(sareeRepo)
 		saree, err := sareeService.Find(res.InsertedID.(primitive.ObjectID).Hex())
 		require.NoError(t, err)
@@ -110,7 +110,7 @@ func Test_sareeRepository(t *testing.T) {
 		err := repo.Drop(context.Background())
 		require.NoError(t, err)
 
-		sareeRepo := sareerepo.NewSareeRepository(repo)
+		sareeRepo := saree_repo.NewSareeRepository(repo)
 		sareeService := services.NewSareeService(sareeRepo)
 		saree, err := sareeService.Save(domain.Saree{
 			FabricType: "cotton",
@@ -135,7 +135,7 @@ func Test_sareeRepository(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		sareeRepo := sareerepo.NewSareeRepository(repo)
+		sareeRepo := saree_repo.NewSareeRepository(repo)
 		sareeService := services.NewSareeService(sareeRepo)
 		saree, err := sareeService.Update(res.InsertedID.(primitive.ObjectID).Hex(), domain.Saree{
 			FabricType: "cotton",
@@ -160,7 +160,7 @@ func Test_sareeRepository(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		sareeRepo := sareerepo.NewSareeRepository(repo)
+		sareeRepo := saree_repo.NewSareeRepository(repo)
 		sareeService := services.NewSareeService(sareeRepo)
 		err = sareeService.Delete(res.InsertedID.(primitive.ObjectID).Hex())
 		require.NoError(t, err)

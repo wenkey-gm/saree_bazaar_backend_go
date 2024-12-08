@@ -2,7 +2,7 @@ package main
 
 import (
 	"product_api/internal/adapters/handlers/sareehdl"
-	"product_api/internal/adapters/repository/sareerepo"
+	"product_api/internal/adapters/repository/saree_repo"
 
 	"product_api/internal/core/services"
 
@@ -11,9 +11,9 @@ import (
 
 func main() {
 
-	collection := sareerepo.ConnectMongoDbCollection()
+	collection := saree_repo.ConnectMongoDbCollection()
 
-	sareeRepository := sareerepo.NewSareeRepository(collection)
+	sareeRepository := saree_repo.NewSareeRepository(collection)
 	sareeService := services.NewSareeService(sareeRepository)
 
 	sareeHandler := sareehdl.NewSareeHandler(sareeService)

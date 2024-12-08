@@ -1,4 +1,4 @@
-package sareerepo
+package saree_repo
 
 import (
 	"context"

@@ -2,6 +2,7 @@ package user_repo
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,9 +19,9 @@ func NewUserRepository(collection *mongo.Collection) *UserRepository {
 	}
 }
 
-func (u *UserRepository) Find(id string) (domain.User, error) {
+func (u *UserRepository) Find(id uuid.UUID) (domain.User, error) {
 	var user domain.User
-	objectId, objectErr := primitive.ObjectIDFromHex(id)
+	objectId, objectErr := primitive.ObjectIDFromHex(id.String())
 	if objectErr != nil {
 		return domain.User{}, objectErr
 	}

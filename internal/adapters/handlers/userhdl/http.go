@@ -16,23 +16,13 @@ func NewUserHandler(userService ports.IUserService) *UserHandler {
 	}
 }
 
-func (u *UserHandler) Find(c *gin.Context) {
-	id := c.Param("id")
-	user, err := u.userService.Find(id)
-	if err != nil {
-		c.JSON(500, err)
-		return
-	}
-	c.JSON(200, user)
-}
-
-func (u *UserHandler) Save(c *gin.Context) {
+func (u *UserHandler) SignUp(c *gin.Context) {
 	var user domain.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(400, err)
 		return
 	}
-	savedUser, err := u.userService.Create(user)
+	savedUser, err := u.userService.SignUp(user)
 	if err != nil {
 		c.JSON(500, err)
 		return
@@ -40,27 +30,16 @@ func (u *UserHandler) Save(c *gin.Context) {
 	c.JSON(200, savedUser)
 }
 
-func (u *UserHandler) Update(c *gin.Context) {
+func (u *UserHandler) Login(c *gin.Context) {
 	var user domain.User
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(400, err)
 		return
 	}
-	id := c.Param("id")
-	updatedUser, err := u.userService.Update(id, user)
+	token, err := u.userService.Login(user)
 	if err != nil {
 		c.JSON(500, err)
 		return
 	}
-	c.JSON(200, updatedUser)
-}
-
-func (u *UserHandler) Delete(c *gin.Context) {
-	id := c.Param("id")
-	err := u.userService.Delete(id)
-	if err != nil {
-		c.JSON(500, err)
-		return
-	}
-	c.JSON(200, gin.H{"message": "User deleted successfully"})
+	c.JSON(200, token)
 }

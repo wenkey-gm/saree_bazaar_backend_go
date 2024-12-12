@@ -25,7 +25,6 @@ func main() {
 
 	userRepository := user_repo.NewUserRepository(userCollection)
 	userService := services.NewUserService(userRepository)
-
 	userHandler := userhdl.NewUserHandler(userService)
 
 	// Saree Collection
@@ -33,7 +32,6 @@ func main() {
 
 	sareeRepository := saree_repo.NewSareeRepository(sareeCollection)
 	sareeService := services.NewSareeService(sareeRepository)
-
 	sareeHandler := sareehdl.NewSareeHandler(sareeService)
 
 	// Token Generator
@@ -41,10 +39,8 @@ func main() {
 	token, _ := generator.GenerateToken()
 	log.Println(token)
 
-	router.GET("/users/:id", userHandler.Find)
-	router.POST("/users", userHandler.Save)
-	router.PUT("/users/:id", userHandler.Update)
-	router.DELETE("/users/:id", userHandler.Delete)
+	router.POST("/signup", userHandler.SignUp)
+	router.POST("/login", userHandler.Login)
 
 	router.GET("/sarees", sareeHandler.FindAll)
 	router.GET("/sarees/:id", sareeHandler.Find)

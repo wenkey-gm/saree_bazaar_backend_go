@@ -3,7 +3,7 @@ package domain
 import "github.com/google/uuid"
 
 type User struct {
-	UID       uuid.UUID `json:"id" bson:"_id"`
+	ID        uuid.UUID `json:"id" bson:"_id"`
 	Username  string    `json:"username" bson:"username"`
 	Password  string    `json:"password" bson:"password"`
 	Email     string    `json:"email" bson:"email"`

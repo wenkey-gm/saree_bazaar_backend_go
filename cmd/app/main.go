@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"product_api/internal/adapters/handlers/sareehdl"
 	"product_api/internal/adapters/handlers/userhdl"
 	"product_api/internal/adapters/repository/saree_repo"
@@ -14,8 +13,6 @@ import (
 )
 
 func main() {
-
-	var secretKey = []byte(utils.SECRET_KEY)
 
 	client := utils.DbConnection()
 	router := gin.New()
@@ -35,9 +32,6 @@ func main() {
 	sareeHandler := sareehdl.NewSareeHandler(sareeService)
 
 	// Token Generator
-	generator := utils.NewTokenGenerator(secretKey)
-	token, _ := generator.GenerateToken()
-	log.Println(token)
 
 	router.POST("/signup", userHandler.SignUp)
 	router.POST("/login", userHandler.Login)

@@ -18,29 +18,6 @@ func NewUserRepository(collection *mongo.Collection) *UserRepository {
 	}
 }
 
-func (u *UserRepository) FindAll() ([]domain.User, error) {
-	var users []domain.User
-	cur, err := u.repo.Find(context.Background(), bson.M{})
-	if err != nil {
-		return nil, err
-	}
-	for cur.Next(context.Background()) {
-		var user domain.User
-		err := cur.Decode(&user)
-		if err != nil {
-			return nil, err
-		}
-		users = append(users, user)
-	}
-	if err := cur.Err(); err != nil {
-		return nil, err
-	}
-
-	cur.Close(context.Background())
-
-	return users, nil
-}
-
 func (u *UserRepository) Find(id string) (domain.User, error) {
 	var user domain.User
 	objectId, objectErr := primitive.ObjectIDFromHex(id)
@@ -54,7 +31,7 @@ func (u *UserRepository) Find(id string) (domain.User, error) {
 	return user, nil
 }
 
-func (u *UserRepository) Save(user domain.User) (domain.User, error) {
+func (u *UserRepository) Create(user domain.User) (domain.User, error) {
 
 	_, err := u.repo.InsertOne(context.Background(), user)
 	if err != nil {

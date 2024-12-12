@@ -8,10 +8,10 @@ import (
 )
 
 type SareeHandler struct {
-	sareeService ports.SareeService
+	sareeService ports.ISareeService
 }
 
-func NewSareeHandler(sareeService ports.SareeService) *SareeHandler {
+func NewSareeHandler(sareeService ports.ISareeService) *SareeHandler {
 	return &SareeHandler{
 		sareeService: sareeService,
 	}

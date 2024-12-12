@@ -7,22 +7,13 @@ import (
 )
 
 type UserHandler struct {
-	userService ports.UserService
+	userService ports.IUserService
 }
 
-func NewUserHandler(userService ports.UserService) *UserHandler {
+func NewUserHandler(userService ports.IUserService) *UserHandler {
 	return &UserHandler{
 		userService: userService,
 	}
-}
-
-func (u *UserHandler) FindAll(c *gin.Context) {
-	users, err := u.userService.FindAll()
-	if err != nil {
-		c.JSON(500, err)
-		return
-	}
-	c.JSON(200, users)
 }
 
 func (u *UserHandler) Find(c *gin.Context) {
@@ -41,7 +32,7 @@ func (u *UserHandler) Save(c *gin.Context) {
 		c.JSON(400, err)
 		return
 	}
-	savedUser, err := u.userService.Save(user)
+	savedUser, err := u.userService.Create(user)
 	if err != nil {
 		c.JSON(500, err)
 		return

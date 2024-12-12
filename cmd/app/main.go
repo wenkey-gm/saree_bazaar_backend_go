@@ -41,7 +41,6 @@ func main() {
 	token, _ := generator.GenerateToken()
 	log.Println(token)
 
-	router.GET("/users", userHandler.FindAll)
 	router.GET("/users/:id", userHandler.Find)
 	router.POST("/users", userHandler.Save)
 	router.PUT("/users/:id", userHandler.Update)

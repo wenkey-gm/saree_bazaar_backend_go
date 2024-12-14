@@ -32,13 +32,12 @@ func (u *UserRepository) Find(id uuid.UUID) (domain.User, error) {
 	return user, nil
 }
 
-func (u *UserRepository) Create(user domain.User) (domain.User, error) {
-
+func (u *UserRepository) Create(user domain.User) error {
 	_, err := u.repo.InsertOne(context.Background(), user)
 	if err != nil {
-		return domain.User{}, err
+		return err
 	}
-	return user, nil
+	return nil
 }
 
 func (u *UserRepository) Update(id string, user domain.User) (domain.User, error) {

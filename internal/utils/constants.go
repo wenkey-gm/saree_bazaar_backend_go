@@ -5,4 +5,5 @@ const (
 	DB_NAME          = "product"
 	USER_COLLECTION  = "users"
 	SAREE_COLLECTION = "sarees"
+	TOKEN_COLLECTION = "tokens"
 )

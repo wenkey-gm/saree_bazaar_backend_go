@@ -44,7 +44,7 @@ func CreateAccessToken(u *domain.User, key *rsa.PrivateKey) (string, error) {
 	return tokenString, nil
 }
 
-func CreateRefreshToken(uid uuid.UUID, key string) (*RefreshToken, error) {
+func CreateRefreshToken(uid uuid.UUID, key *rsa.PrivateKey) (*RefreshToken, error) {
 	currentTime := time.Now()
 	tokenExp := currentTime.AddDate(0, 0, 3) // 3 days
 	tokenID, err := uuid.NewRandom()
@@ -64,7 +64,7 @@ func CreateRefreshToken(uid uuid.UUID, key string) (*RefreshToken, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 
-	tokenString, err := token.SignedString([]byte(key))
+	tokenString, err := token.SignedString(key)
 
 	if err != nil {
 		return nil, err

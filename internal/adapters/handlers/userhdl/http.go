@@ -37,15 +37,24 @@ func (u *UserHandler) SignUp(c *gin.Context) {
 }
 
 func (u *UserHandler) Login(c *gin.Context) {
-	var user domain.User
+	var user domain.SignRequest
 	if err := c.ShouldBindJSON(&user); err != nil {
 		c.JSON(400, err)
 		return
 	}
-	token, err := u.userService.Login(user)
+	fetchedUser, err := u.userService.Login(user)
 	if err != nil {
 		c.JSON(500, err)
 		return
 	}
-	c.JSON(200, token)
+	tokens, err := u.tokenService.GenerateTokens(c, &fetchedUser, "")
+
+	if err != nil {
+		c.JSON(500, err)
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"tokens": tokens,
+	})
 }

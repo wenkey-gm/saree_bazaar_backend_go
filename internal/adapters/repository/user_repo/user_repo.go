@@ -32,6 +32,14 @@ func (u *UserRepository) Find(id uuid.UUID) (domain.User, error) {
 	return user, nil
 }
 
+func (u *UserRepository) FindByEmail(email string) (domain.User, error) {
+	var user domain.User
+	err := u.repo.FindOne(context.Background(), bson.M{"email": email}).Decode(&user)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return user, nil
+}
 func (u *UserRepository) Create(user domain.User) error {
 	_, err := u.repo.InsertOne(context.Background(), user)
 	if err != nil {

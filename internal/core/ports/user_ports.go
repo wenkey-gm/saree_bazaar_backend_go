@@ -7,6 +7,7 @@ import (
 
 type IUserRepository interface {
 	Find(id uuid.UUID) (domain.User, error)
+	FindByEmail(email string) (domain.User, error)
 	Create(user domain.User) error
 	Update(id string, user domain.User) (domain.User, error)
 	Delete(id string) error
@@ -14,5 +15,5 @@ type IUserRepository interface {
 
 type IUserService interface {
 	SignUp(user domain.User) error
-	Login(user domain.User) (domain.User, error)
+	Login(user domain.SignRequest) (domain.User, error)
 }

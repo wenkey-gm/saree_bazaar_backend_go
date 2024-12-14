@@ -31,6 +31,17 @@ func (s *UserService) SignUp(user domain.User) error {
 	return nil
 }
 
-func (s *UserService) Login(user domain.User) (domain.User, error) {
-	return s.repository.Find(user.ID)
+func (s *UserService) Login(user domain.SignRequest) (domain.User, error) {
+	uFetched, err := s.repository.FindByEmail(user.Email)
+	if err != nil {
+		return domain.User{}, err
+	}
+	match, err := utils.ComparePasswords(uFetched.Password, user.Password)
+	if err != nil {
+		return domain.User{}, err
+	}
+	if !match {
+		return domain.User{}, err
+	}
+	return uFetched, nil
 }

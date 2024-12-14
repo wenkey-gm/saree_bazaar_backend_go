@@ -96,5 +96,4 @@ func main() {
 	router.DELETE("/sarees/:id", sareeHandler.Delete)
 
 	router.Run(":8080")
-
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/joho/godotenv"
 	"os"
+	"product_api/internal/adapters/handlers/middlewares"
 	"product_api/internal/adapters/handlers/sareehdl"
 	"product_api/internal/adapters/handlers/userhdl"
 	"product_api/internal/adapters/repository/saree_repo"
@@ -89,7 +90,7 @@ func main() {
 	router.POST("/signup", userHandler.SignUp)
 	router.POST("/login", userHandler.Login)
 
-	router.GET("/sarees", sareeHandler.FindAll)
+	router.GET("/sarees", middlewares.AuthUser(tokenService), sareeHandler.FindAll)
 	router.GET("/sarees/:id", sareeHandler.Find)
 	router.POST("/sarees", sareeHandler.Save)
 	router.PUT("/sarees/:id", sareeHandler.Update)

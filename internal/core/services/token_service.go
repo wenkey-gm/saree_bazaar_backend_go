@@ -44,7 +44,7 @@ func (s *TokenService) GenerateTokens(ctx context.Context, u *domain.User, prevA
 		return nil, err
 	}
 
-	refreshToken, err := utils.CreateRefreshToken(u.ID, s.pri)
+	refreshToken, err := utils.CreateRefreshToken(u.ID, s.refreshSecret)
 	if err != nil {
 		return nil, err
 	}

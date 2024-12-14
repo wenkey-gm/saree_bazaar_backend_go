@@ -2,6 +2,7 @@ package utils
 
 import (
 	"crypto/rsa"
+	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"log"
@@ -75,4 +76,29 @@ func CreateRefreshToken(uid uuid.UUID, key *rsa.PrivateKey) (*RefreshToken, erro
 		ID:        tokenID.String(),
 		ExpiresIn: tokenExp.Sub(currentTime),
 	}, nil
+}
+
+func ValidateIDToken(tokenString string, key *rsa.PublicKey) (*IDTokenCustomClaims, error) {
+	claims := &IDTokenCustomClaims{}
+
+	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
+		return key, nil
+	})
+
+	// For now we'll just return the error and handle logging in service level
+	if err != nil {
+		return nil, err
+	}
+
+	if !token.Valid {
+		return nil, fmt.Errorf("ID token is invalid")
+	}
+
+	claims, ok := token.Claims.(*IDTokenCustomClaims)
+
+	if !ok {
+		return nil, fmt.Errorf("ID token valid but couldn't parse claims")
+	}
+
+	return claims, nil
 }

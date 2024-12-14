@@ -13,4 +13,5 @@ type ITokenRepository interface {
 
 type ITokenService interface {
 	GenerateTokens(ctx context.Context, u *domain.User, prevAccessToken string) (*domain.Tokens, error)
+	ValidateIDToken(tokenString string) (*domain.User, error)
 }

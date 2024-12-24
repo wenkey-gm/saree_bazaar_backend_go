@@ -69,6 +69,10 @@ func (s *TokenService) GenerateTokens(ctx context.Context, u *domain.User, prevA
 
 }
 
+func (s *TokenService) SignOut(ctx context.Context, uid string) error {
+	return s.tokenRepository.DeleteUserRefreshTokens(ctx, uid)
+}
+
 func (s *TokenService) ValidateIDToken(tokenString string) (*domain.User, error) {
 	claims, err := utils.ValidateIDToken(tokenString, s.pub) // uses public RSA key
 

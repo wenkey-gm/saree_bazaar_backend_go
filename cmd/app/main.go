@@ -89,6 +89,7 @@ func main() {
 
 	router.POST("/signup", userHandler.SignUp)
 	router.POST("/login", userHandler.Login)
+	router.DELETE("/signout", userHandler.SignOut)
 
 	router.GET("/sarees", middlewares.AuthUser(tokenService), sareeHandler.FindAll)
 	router.GET("/sarees/:id", sareeHandler.Find)

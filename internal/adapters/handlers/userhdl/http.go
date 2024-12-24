@@ -58,3 +58,19 @@ func (u *UserHandler) Login(c *gin.Context) {
 		"tokens": tokens,
 	})
 }
+
+func (u *UserHandler) SignOut(c *gin.Context) {
+	user := c.MustGet("user")
+
+	ctx := c.Request.Context()
+	if err := u.tokenService.SignOut(ctx, user.(*domain.User).ID.String()); err != nil {
+		c.JSON(500, gin.H{
+			"error": err,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "user signed out successfully!",
+	})
+}

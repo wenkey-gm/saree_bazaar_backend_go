@@ -32,3 +32,11 @@ func (t *TokenRepository) DeleteRefreshToken(ctx context.Context, userID string,
 	}
 	return nil
 }
+
+func (t *TokenRepository) DeleteUserRefreshTokens(ctx context.Context, userID string) error {
+	_, err := t.repo.DeleteMany(ctx, bson.M{"user_id": userID})
+	if err != nil {
+		return err
+	}
+	return nil
+}

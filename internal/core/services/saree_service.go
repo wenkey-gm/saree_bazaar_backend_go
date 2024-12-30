@@ -6,10 +6,10 @@ import (
 )
 
 type SareeService struct {
-	repository ports.SareeRepository
+	repository ports.ISareeRepository
 }
 
-func NewSareeService(repository ports.SareeRepository) *SareeService {
+func NewSareeService(repository ports.ISareeRepository) *SareeService {
 	return &SareeService{
 		repository: repository,
 	}

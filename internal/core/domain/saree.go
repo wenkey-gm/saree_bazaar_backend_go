@@ -1,7 +1,10 @@
 package domain
 
+import "github.com/google/uuid"
+
 type Saree struct {
-	FabricType       string     `json:"fabric_type" `
+	UID              uuid.UUID  `json:"id"`
+	FabricType       string     `json:"fabric_type"`
 	Category         string     `json:"category"`
 	Color            string     `json:"color"`
 	DesignPattern    string     `json:"design_pattern"`

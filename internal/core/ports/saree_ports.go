@@ -2,7 +2,7 @@ package ports
 
 import "product_api/internal/core/domain"
 
-type SareeRepository interface {
+type ISareeRepository interface {
 	FindAll() ([]domain.Saree, error)
 	Find(id string) (domain.Saree, error)
 	Save(saree domain.Saree) (domain.Saree, error)
@@ -10,7 +10,7 @@ type SareeRepository interface {
 	Delete(id string) error
 }
 
-type SareeService interface {
+type ISareeService interface {
 	FindAll() ([]domain.Saree, error)
 	Find(id string) (domain.Saree, error)
 	Save(saree domain.Saree) (domain.Saree, error)

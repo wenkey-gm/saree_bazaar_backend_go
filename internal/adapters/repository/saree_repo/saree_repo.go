@@ -1,55 +1,24 @@
-package sareerepo
+package saree_repo
 
 import (
 	"context"
-	"fmt"
-	"log"
-	"os"
-	"product_api/internal/core/domain"
-	"product_api/internal/utils"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"product_api/internal/core/domain"
 )
 
-func ConnectMongoDbCollection() *mongo.Collection {
-
-	MONGO_URL := os.Getenv("MONGO_URL")
-	if MONGO_URL == "" {
-		MONGO_URL = utils.MONGO_URL
-	}
-	clientOptions := options.Client().ApplyURI(MONGO_URL) // mongodb://localhost:27017
-
-	client, err := mongo.Connect(context.Background(), clientOptions)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = client.Ping(context.Background(), nil)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Connected to MongoDB!")
-
-	return client.Database(utils.DB_NAME).Collection(utils.COLLECTION_NAME)
-}
-
-type sareeRepository struct {
+type SareeRepository struct {
 	repo *mongo.Collection
 }
 
-func NewSareeRepository(collection *mongo.Collection) *sareeRepository {
-	return &sareeRepository{
+func NewSareeRepository(collection *mongo.Collection) *SareeRepository {
+	return &SareeRepository{
 		repo: collection,
 	}
 }
 
-func (s *sareeRepository) FindAll() ([]domain.Saree, error) {
+func (s *SareeRepository) FindAll() ([]domain.Saree, error) {
 	var sarees []domain.Saree
 	cur, err := s.repo.Find(context.Background(), bson.M{})
 	if err != nil {
@@ -72,7 +41,7 @@ func (s *sareeRepository) FindAll() ([]domain.Saree, error) {
 	return sarees, nil
 }
 
-func (s *sareeRepository) Find(id string) (domain.Saree, error) {
+func (s *SareeRepository) Find(id string) (domain.Saree, error) {
 	var saree domain.Saree
 	objectId, objectErr := primitive.ObjectIDFromHex(id)
 	if objectErr != nil {
@@ -85,7 +54,7 @@ func (s *sareeRepository) Find(id string) (domain.Saree, error) {
 	return saree, nil
 }
 
-func (s *sareeRepository) Save(saree domain.Saree) (domain.Saree, error) {
+func (s *SareeRepository) Save(saree domain.Saree) (domain.Saree, error) {
 
 	_, err := s.repo.InsertOne(context.Background(), saree)
 	if err != nil {
@@ -94,7 +63,7 @@ func (s *sareeRepository) Save(saree domain.Saree) (domain.Saree, error) {
 	return saree, nil
 }
 
-func (s *sareeRepository) Update(id string, saree domain.Saree) (domain.Saree, error) {
+func (s *SareeRepository) Update(id string, saree domain.Saree) (domain.Saree, error) {
 	_, err := s.repo.UpdateOne(context.Background(), bson.M{"id": id}, bson.M{"$set": saree})
 	if err != nil {
 		return domain.Saree{}, err
@@ -103,7 +72,7 @@ func (s *sareeRepository) Update(id string, saree domain.Saree) (domain.Saree, e
 
 }
 
-func (s *sareeRepository) Delete(id string) error {
+func (s *SareeRepository) Delete(id string) error {
 	objectId, objectErr := primitive.ObjectIDFromHex(id)
 	if objectErr != nil {
 		return objectErr

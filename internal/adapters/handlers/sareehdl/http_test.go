@@ -70,7 +70,7 @@ func NewMockSareeHandler() *SareeHandler {
 
 func TestSareeHandler_FindAll(t *testing.T) {
 	type fields struct {
-		sareeService ports.SareeService
+		sareeService ports.ISareeService
 	}
 	type args struct {
 		c *gin.Context
@@ -108,7 +108,7 @@ func TestSareeHandler_FindAll(t *testing.T) {
 
 func TestSareeHandler_Find(t *testing.T) {
 	type fields struct {
-		sareeService ports.SareeService
+		sareeService ports.ISareeService
 	}
 	type args struct {
 		c *gin.Context
@@ -156,7 +156,7 @@ func TestSareeHandler_Find(t *testing.T) {
 
 func TestSareeHandler_Save(t *testing.T) {
 	type fields struct {
-		sareeService ports.SareeService
+		sareeService ports.ISareeService
 	}
 	type args struct {
 		c *gin.Context
@@ -194,7 +194,7 @@ func TestSareeHandler_Save(t *testing.T) {
 
 func TestSareeHandler_Update(t *testing.T) {
 	type fields struct {
-		sareeService ports.SareeService
+		sareeService ports.ISareeService
 	}
 	type args struct {
 		c *gin.Context
@@ -232,7 +232,7 @@ func TestSareeHandler_Update(t *testing.T) {
 
 func TestSareeHandler_Delete(t *testing.T) {
 	type fields struct {
-		sareeService ports.SareeService
+		sareeService ports.ISareeService
 	}
 	type args struct {
 		c *gin.Context

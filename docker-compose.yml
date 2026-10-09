@@ -11,6 +11,7 @@ services:
       - 8080:8080
     environment:
       MONGO_URI: mongodb://mongo:27017
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3001
   mongo:
     image: mongo:latest
     container_name: mongo

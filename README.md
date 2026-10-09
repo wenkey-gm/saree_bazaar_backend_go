@@ -63,6 +63,7 @@ The backend requires certain environment variables for proper functioning. These
     PUB_KEY_FILE=public.pem
     ID_TOKEN_EXP=900
     REFRESH_TOKEN_EXP=259200
+    ALLOWED_ORIGINS=https://munichandrasarees.com,http://localhost:3001
    ```
 These variables are used for:
 
@@ -72,6 +73,21 @@ These variables are used for:
 - **PUB_KEY_FILE**: The public key file for generating JWT tokens.
 - **ID_TOKEN_EXP**: The expiry time for ID tokens.
 - **REFRESH_TOKEN_EXP**: The expiry time for refresh tokens.
+- **ALLOWED_ORIGINS**: Comma-separated browser origins allowed to call the API (CORS). Server-to-server calls, such as the storefront's server-side catalog fetch, don't need to be listed.
+
+## Frontend integration
+
+The storefront ([munichandra-sarees-web](https://github.com/wenkey-gm/munichandra-sarees-web)) reads its catalog from this API. Set `SAREE_API_URL` there to this server's base URL (e.g. `http://localhost:8080`). The `/collections` page then lists sarees from `GET /sarees`, and falls back to its built-in product list if the API is unreachable.
+
+| Method | Path | Auth |
+|---|---|---|
+| `GET` | `/sarees`, `/sarees/:id` | Public |
+| `POST` | `/sarees` | `Authorization: Bearer <access_token>` |
+| `PUT`, `DELETE` | `/sarees/:id` | `Authorization: Bearer <access_token>` |
+| `POST` | `/signup`, `/login` | Public; both return `tokens` |
+| `DELETE` | `/signout` | `Authorization: Bearer <access_token>` |
+
+A saree's `name`, `description`, `category`, `color` and `images_url` are what the storefront displays.
 
 ## Folder Structure
 

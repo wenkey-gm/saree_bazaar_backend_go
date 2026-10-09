@@ -19,7 +19,8 @@ func NewSareeRepository(collection *mongo.Collection) *SareeRepository {
 }
 
 func (s *SareeRepository) FindAll() ([]domain.Saree, error) {
-	var sarees []domain.Saree
+	// Non-nil so an empty catalog encodes as [] rather than null.
+	sarees := []domain.Saree{}
 	cur, err := s.repo.Find(context.Background(), bson.M{})
 	if err != nil {
 		return nil, err

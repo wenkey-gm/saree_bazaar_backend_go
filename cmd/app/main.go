@@ -28,6 +28,7 @@ func main() {
 
 	client := utils.DbConnection()
 	router := gin.New()
+	router.Use(middlewares.CORS(os.Getenv("ALLOWED_ORIGINS")))
 
 	privKeyFile := os.Getenv("PRIV_KEY_FILE")
 	priv, err := os.ReadFile(privKeyFile)
@@ -89,13 +90,14 @@ func main() {
 
 	router.POST("/signup", userHandler.SignUp)
 	router.POST("/login", userHandler.Login)
-	router.DELETE("/signout", userHandler.SignOut)
+	router.DELETE("/signout", middlewares.AuthUser(tokenService), userHandler.SignOut)
 
-	router.GET("/sarees", middlewares.AuthUser(tokenService), sareeHandler.FindAll)
+	// The catalog is public so the storefront can list it; writes need a signed-in user.
+	router.GET("/sarees", sareeHandler.FindAll)
 	router.GET("/sarees/:id", sareeHandler.Find)
-	router.POST("/sarees", sareeHandler.Save)
-	router.PUT("/sarees/:id", sareeHandler.Update)
-	router.DELETE("/sarees/:id", sareeHandler.Delete)
+	router.POST("/sarees", middlewares.AuthUser(tokenService), sareeHandler.Save)
+	router.PUT("/sarees/:id", middlewares.AuthUser(tokenService), sareeHandler.Update)
+	router.DELETE("/sarees/:id", middlewares.AuthUser(tokenService), sareeHandler.Delete)
 
 	router.Run(":8080")
 }

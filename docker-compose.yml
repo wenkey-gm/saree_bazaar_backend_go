@@ -12,6 +12,11 @@ services:
     environment:
       MONGO_URI: mongodb://mongo:27017
       ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3001
+      # Emails allowed to manage the catalog at http://localhost:8080/admin
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - saree_uploads:/data/uploads
   mongo:
     image: mongo:latest
     container_name: mongo
@@ -22,3 +27,4 @@ services:
 
 volumes:
   mongodb_data_container:
+  saree_uploads:

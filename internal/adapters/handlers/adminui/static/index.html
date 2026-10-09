@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Saree Catalog Admin</title>
+  <link rel="stylesheet" href="/admin/assets/admin.css">
+  <script src="/admin/assets/admin.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">✦</span>
+      <span>Saree Catalog</span>
+    </div>
+    <div class="topbar-actions" id="session-actions" hidden>
+      <span class="who" id="who"></span>
+      <button type="button" class="btn btn-ghost" id="logout">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Sign in -->
+    <section id="login-view" class="card narrow" hidden>
+      <h1>Sign in</h1>
+      <p class="muted" id="login-reason">Use an admin account to add and edit sarees.</p>
+      <form id="login-form" novalidate>
+        <label>Email
+          <input type="email" name="email" autocomplete="username" required>
+        </label>
+        <label>Password
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <p class="error" id="login-error" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+      </form>
+    </section>
+
+    <!-- Catalog list -->
+    <section id="list-view" hidden>
+      <div class="toolbar">
+        <div>
+          <h1>Sarees</h1>
+          <p class="muted" id="count"></p>
+        </div>
+        <button type="button" class="btn btn-primary" id="add-saree">+ Add saree</button>
+      </div>
+      <input type="search" id="search" class="search" placeholder="Search by name, category, color…" aria-label="Search sarees">
+      <p class="empty" id="empty" hidden>No sarees yet. Tap <strong>Add saree</strong> to create the first one.</p>
+      <ul class="saree-list" id="saree-list"></ul>
+    </section>
+
+    <!-- Add / edit -->
+    <section id="edit-view" hidden>
+      <div class="toolbar">
+        <h1 id="edit-title">Add saree</h1>
+        <button type="button" class="btn btn-ghost" data-action="cancel">Cancel</button>
+      </div>
+      <form id="saree-form" class="card" novalidate>
+        <fieldset>
+          <legend>Photos</legend>
+          <p class="muted small">The first photo is the cover shown on the website. Use the arrows to reorder.</p>
+          <ul class="photos" id="photos"></ul>
+          <label class="dropzone" id="dropzone">
+            <input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple>
+            <span><strong>Add photos</strong> — take a picture or choose from your gallery</span>
+          </label>
+          <p class="muted small" id="upload-status" aria-live="polite"></p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Details</legend>
+          <label>Name <span class="req">*</span>
+            <input name="name" required maxlength="120" placeholder="e.g. Venkatagiri Pattu – Peacock Border">
+          </label>
+          <label>Description
+            <textarea name="description" rows="3" maxlength="1000" placeholder="Weave, border, occasion…"></textarea>
+          </label>
+          <div class="grid-2">
+            <label>Category
+              <input name="category" list="category-options" maxlength="60" placeholder="e.g. Bridal Silk">
+            </label>
+            <label>Fabric
+              <input name="fabric_type" list="fabric-options" maxlength="60" placeholder="e.g. Silk">
+            </label>
+            <label>Color
+              <input name="color" maxlength="60" placeholder="e.g. Maroon">
+            </label>
+            <label>Design / pattern
+              <input name="design_pattern" maxlength="60" placeholder="e.g. Butta, Checks">
+            </label>
+          </div>
+          <datalist id="category-options"></datalist>
+          <datalist id="fabric-options"></datalist>
+        </fieldset>
+
+        <fieldset>
+          <legend>Price &amp; stock</legend>
+          <div class="grid-2">
+            <label>Price (₹)
+              <input name="price" type="number" inputmode="numeric" min="0" step="1" placeholder="0">
+            </label>
+            <label>In stock
+              <input name="stock" type="number" inputmode="numeric" min="0" step="1" placeholder="0">
+            </label>
+          </div>
+          <label class="check">
+            <input type="checkbox" name="availability" checked>
+            Show on the website
+          </label>
+        </fieldset>
+
+        <details>
+          <summary>Measurements (optional)</summary>
+          <div class="grid-2">
+            <label>Saree length <input name="saree_length" maxlength="20" placeholder="e.g. 6.2 m"></label>
+            <label>Saree width <input name="saree_breadth" maxlength="20" placeholder="e.g. 1.2 m"></label>
+            <label>Blouse length <input name="blouse_length" maxlength="20" placeholder="e.g. 0.8 m"></label>
+            <label>Blouse width <input name="blouse_breadth" maxlength="20" placeholder="e.g. 1.1 m"></label>
+          </div>
+        </details>
+
+        <p class="error" id="form-error" role="alert" hidden></p>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-action="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save">Save saree</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <template id="saree-item">
+    <li class="saree">
+      <img class="thumb" alt="" loading="lazy">
+      <div class="info">
+        <p class="name"></p>
+        <p class="meta muted small"></p>
+        <p class="meta2 small"></p>
+      </div>
+      <div class="item-actions">
+        <button type="button" class="btn btn-small" data-action="edit">Edit</button>
+        <button type="button" class="btn btn-small btn-danger" data-action="delete">Delete</button>
+      </div>
+    </li>
+  </template>
+
+  <template id="photo-item">
+    <li class="photo">
+      <img alt="">
+      <span class="cover-badge">Cover</span>
+      <div class="photo-actions">
+        <button type="button" data-action="left" aria-label="Move earlier">←</button>
+        <button type="button" data-action="right" aria-label="Move later">→</button>
+        <button type="button" data-action="remove" aria-label="Remove photo">✕</button>
+      </div>
+    </li>
+  </template>
+</body>
+</html>

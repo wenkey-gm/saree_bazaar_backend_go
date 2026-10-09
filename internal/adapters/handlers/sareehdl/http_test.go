@@ -183,7 +183,7 @@ func TestSareeHandler_Save(t *testing.T) {
 			}
 			s.Save(tt.args.c)
 
-			assert.Equal(t, 200, tt.args.c.Writer.Status())
+			assert.Equal(t, 201, tt.args.c.Writer.Status())
 
 			var saree domain.Saree
 			tt.args.c.BindJSON(&saree)

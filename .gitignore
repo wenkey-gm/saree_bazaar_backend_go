@@ -23,3 +23,5 @@
 
 # Go workspace file
 go.work
+# Photos uploaded through the admin panel
+uploads/

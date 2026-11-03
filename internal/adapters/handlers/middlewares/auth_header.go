@@ -4,6 +4,8 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"net/http"
+	"product_api/internal/core/domain"
 	"product_api/internal/core/services"
 	"strings"
 )
@@ -62,7 +64,7 @@ func AuthUser(s *services.TokenService) gin.HandlerFunc {
 
 		if len(idTokenHeader) < 2 {
 
-			c.JSON(500, gin.H{
+			c.JSON(401, gin.H{
 				"error": "Authorization header must be of the form 'Bearer token'",
 			})
 			c.Abort()
@@ -83,6 +85,21 @@ func AuthUser(s *services.TokenService) gin.HandlerFunc {
 
 		c.Set("user", user)
 
+		c.Next()
+	}
+}
+
+// RequireAdmin must run after AuthUser; it rejects users without the admin role.
+func RequireAdmin() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user, ok := c.Get("user")
+		if u, isUser := user.(*domain.User); !ok || !isUser || u.Role != domain.RoleAdmin {
+			c.JSON(http.StatusForbidden, gin.H{
+				"error": "admin access required",
+			})
+			c.Abort()
+			return
+		}
 		c.Next()
 	}
 }

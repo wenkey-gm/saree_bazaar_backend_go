@@ -4,6 +4,8 @@ import "github.com/google/uuid"
 
 type Saree struct {
 	UID              uuid.UUID  `json:"id"`
+	Name             string     `json:"name"`
+	Description      string     `json:"description"`
 	FabricType       string     `json:"fabric_type"`
 	Category         string     `json:"category"`
 	Color            string     `json:"color"`

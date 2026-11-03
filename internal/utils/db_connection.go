@@ -11,7 +11,12 @@ import (
 )
 
 func DbConnection() *mongo.Client {
-	MongoUrl := os.Getenv("MONGO_URL")
+	// MONGO_URI is the documented name (README, docker-compose); MONGO_URL is
+	// kept for existing setups.
+	MongoUrl := os.Getenv("MONGO_URI")
+	if MongoUrl == "" {
+		MongoUrl = os.Getenv("MONGO_URL")
+	}
 	if MongoUrl == "" {
 		MongoUrl = MONGO_URL
 	}

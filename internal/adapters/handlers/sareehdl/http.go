@@ -1,6 +1,9 @@
 package sareehdl
 
 import (
+	"errors"
+	"log"
+	"net/http"
 	"product_api/internal/core/domain"
 	"product_api/internal/core/ports"
 
@@ -17,10 +20,22 @@ func NewSareeHandler(sareeService ports.ISareeService) *SareeHandler {
 	}
 }
 
+func sareeError(c *gin.Context, err error) {
+	switch {
+	case errors.Is(err, domain.ErrNotFound):
+		c.JSON(http.StatusNotFound, gin.H{"error": "saree not found"})
+	case errors.Is(err, domain.ErrInvalidInput):
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	default:
+		log.Printf("saree request failed: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "something went wrong"})
+	}
+}
+
 func (s *SareeHandler) FindAll(c *gin.Context) {
 	sarees, err := s.sareeService.FindAll()
 	if err != nil {
-		c.JSON(500, err)
+		sareeError(c, err)
 		return
 	}
 	c.JSON(200, sarees)
@@ -30,7 +45,7 @@ func (s *SareeHandler) Find(c *gin.Context) {
 	id := c.Param("id")
 	saree, err := s.sareeService.Find(id)
 	if err != nil {
-		c.JSON(500, err)
+		sareeError(c, err)
 		return
 	}
 	c.JSON(200, saree)
@@ -39,27 +54,27 @@ func (s *SareeHandler) Find(c *gin.Context) {
 func (s *SareeHandler) Save(c *gin.Context) {
 	var saree domain.Saree
 	if err := c.ShouldBindJSON(&saree); err != nil {
-		c.JSON(400, err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
 	savedSaree, err := s.sareeService.Save(saree)
 	if err != nil {
-		c.JSON(500, err)
+		sareeError(c, err)
 		return
 	}
-	c.JSON(200, savedSaree)
+	c.JSON(http.StatusCreated, savedSaree)
 }
 
 func (s *SareeHandler) Update(c *gin.Context) {
 	var saree domain.Saree
 	if err := c.ShouldBindJSON(&saree); err != nil {
-		c.JSON(400, err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
 	id := c.Param("id")
 	updatedSaree, err := s.sareeService.Update(id, saree)
 	if err != nil {
-		c.JSON(500, err)
+		sareeError(c, err)
 		return
 	}
 	c.JSON(200, updatedSaree)
@@ -69,7 +84,7 @@ func (s *SareeHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
 	err := s.sareeService.Delete(id)
 	if err != nil {
-		c.JSON(500, err)
+		sareeError(c, err)
 		return
 	}
 	c.JSON(200, "Saree deleted successfully")

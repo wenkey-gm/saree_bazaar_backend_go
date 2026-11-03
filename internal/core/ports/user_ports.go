@@ -14,6 +14,6 @@ type IUserRepository interface {
 }
 
 type IUserService interface {
-	SignUp(user domain.User) error
+	SignUp(user domain.User) (domain.User, error)
 	Login(user domain.SignRequest) (domain.User, error)
 }
